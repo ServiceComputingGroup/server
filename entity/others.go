@@ -83,7 +83,7 @@ type Vehicle struct {
 	Passengers             string   `json:"passengers"`
 	Cargo_capacity         string   `json:"cargo_capacity"`
 	Consumables            string   `json:"consumables"`
-	vehicle_class          string   `json:"hyperdrive_rating"`
+	Vehicle_class          string   `json:"hyperdrive_rating"`
 	Pilots                 []string `json:"pilots"`
 	Films                  []string `json:"films"`
 	Created                string   `json:"created"`
