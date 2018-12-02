@@ -4,11 +4,11 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func GetPerson(key string) string {
+func GetSpecies(key string) string {
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
+		b := tx.Bucket(species)
 		val = b.Get(k)
 		return nil
 	})
@@ -16,12 +16,12 @@ func GetPerson(key string) string {
 	return str
 }
 
-func GetPeople() []string {
+func GetAllSpecies() []string {
 
 	var result []string
 
 	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
+		b := tx.Bucket(species)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {

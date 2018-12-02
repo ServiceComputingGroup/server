@@ -4,11 +4,11 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func GetPerson(key string) string {
+func GetPlanet(key string) string {
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
+		b := tx.Bucket(planet)
 		val = b.Get(k)
 		return nil
 	})
@@ -16,12 +16,14 @@ func GetPerson(key string) string {
 	return str
 }
 
-func GetPeople() []string {
+func GetPlanets() []string {
+	var numbers []int
+	numbers = append(numbers, 2, 3, 4)
 
 	var result []string
 
 	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
+		b := tx.Bucket(planet)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {

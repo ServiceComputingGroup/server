@@ -1,21 +1,51 @@
 package database
 
 import (
-	"github.com/liping/simpleWebServer/entity"
+	"encoding/json"
+
+	"github.com/ServiceComputingGroup/simpleWebServer/entity"
+	"github.com/boltdb/bolt"
 )
 
-func SaveUser(usrs []entity.User) {
-	return
+func InsertUser(user *entity.User) bool {
+	_, err := GetUser(user.UserName)
+	if err == nil {
+		return false
+	}
+	if UpdateUser(user) == nil {
+		return true
+	}
+	return false
 }
-func LoadUser() []entity.User {
-	var res = make([]entity.User, 0)
-	return res
+func DeleteUser(username string) error {
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(userB)
+
+		return b.Delete([]byte(username))
+	})
+	return err
+
 }
+func UpdateUser(user *entity.User) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(userB)
 
-func SaveToken(tokens []string) {
-
+		encoded, err := json.Marshal(user)
+		if err != nil {
+			return err
+		}
+		return b.Put([]byte(user.UserName), encoded)
+	})
+	return err
 }
+func GetUser(username string) (*entity.User, error) {
+	var user *entity.User
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(userB)
+		val := b.Get([]byte(username))
+		err := json.Unmarshal(val, &user)
+		return err
+	})
+	return user, err
 
-func LoadToken() []string {
-	return make([]string, 0)
 }
