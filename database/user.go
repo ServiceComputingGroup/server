@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
@@ -39,9 +40,13 @@ func UpdateUser(user *entity.User) error {
 	return err
 }
 func GetUser(username string) (*entity.User, error) {
+	fmt.Println("GetUser")
 	var user *entity.User
+
 	err := db.View(func(tx *bolt.Tx) error {
+
 		b := tx.Bucket(userB)
+
 		val := b.Get([]byte(username))
 		err := json.Unmarshal(val, &user)
 		return err

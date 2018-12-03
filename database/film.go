@@ -1,18 +1,24 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/boltdb/bolt"
 )
 
 func GetFilm(key string) string {
+	fmt.Println("GetFilm")
+	fmt.Println(key)
 	k := []byte(key)
+	fmt.Println(k)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(film)
 		val = b.Get(k)
+		fmt.Println(val)
 		return nil
 	})
-	str := string(val[:])
+	str := string(val)
 	return str
 }
 

@@ -2,7 +2,7 @@ package entity
 
 type Film struct {
 	Title         string   `json:"title"`
-	Episode_id    string   `json:"episode_id"`
+	Episode_id    int      `json:"episode_id"`
 	Opening_crawl string   `json:"opening_crawl"`
 	Director      string   `json:"director"`
 	Producer      string   `json:"producer"`
@@ -83,7 +83,7 @@ type Vehicle struct {
 	Passengers             string   `json:"passengers"`
 	Cargo_capacity         string   `json:"cargo_capacity"`
 	Consumables            string   `json:"consumables"`
-	vehicle_class          string   `json:"hyperdrive_rating"`
+	Vehicle_class          string   `json:"hyperdrive_rating"`
 	Pilots                 []string `json:"pilots"`
 	Films                  []string `json:"films"`
 	Created                string   `json:"created"`
