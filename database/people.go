@@ -8,10 +8,13 @@ func GetPerson(key string) string {
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {
+
 		b := tx.Bucket(people)
 		val = b.Get(k)
+
 		return nil
 	})
+
 	str := string(val[:])
 	return str
 }

@@ -45,6 +45,7 @@ func AddInitData() {
 
 	//创建bucket
 	fmt.Println("正在创建bucket")
+
 	db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucket(userB)
 		if err != nil {
@@ -76,112 +77,125 @@ func AddInitData() {
 			fmt.Println("open err:", err)
 		}
 
-		fmt.Println("正在插入数据")
-		peoples := initPeoples()
-		films := initFilms()
-		starships := initStarships()
-		planets := initPlanets()
-		vehicles := initVehicles()
-		speciesAll := initSpecies()
-
-		fmt.Println("正在插入peoples")
-		b := tx.Bucket(people)
-		for i, v := range peoples { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
-		fmt.Println("正在插入films")
-		b = tx.Bucket(film)
-		for i, v := range films { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			fmt.Println([]byte(strconv.Itoa(i + 1)))
-
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			val := b.Get([]byte(strconv.Itoa(i + 1)))
-			fmt.Println(val)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
-		fmt.Println("正在插入starships")
-		b = tx.Bucket(starship)
-		for i, v := range starships { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
-		fmt.Println("正在插入planets")
-		b = tx.Bucket(planet)
-		for i, v := range planets { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
-		fmt.Println("正在插入vehicles")
-		b = tx.Bucket(vehicle)
-		for i, v := range vehicles { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
-		fmt.Println("正在插入species")
-		b = tx.Bucket(species)
-		for i, v := range speciesAll { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-			err = b.Put([]byte(strconv.Itoa(i+1)), []byte(encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-
 		return err
 
+	})
+	fmt.Println("正在插入数据")
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入peoples")
+		peoples := initPeoples()
+		b := tx.Bucket(people)
+		for i, v := range peoples { //range遍历，返回下标，和值
+
+			encoded, err := json.MarshalIndent(v, "", "\t")
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入starships")
+		starships := initStarships()
+		b := tx.Bucket(starship)
+		for i, v := range starships { //range遍历，返回下标，和值
+			encoded, err := json.MarshalIndent(v, "", "\t")
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入planets")
+		planets := initPlanets()
+		b := tx.Bucket(planet)
+		for i, v := range planets { //range遍历，返回下标，和值
+			encoded, err := json.MarshalIndent(v, "", "\t")
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入films")
+		films := initFilms()
+		b := tx.Bucket(film)
+		for i, v := range films { //range遍历，返回下标，和值
+			encoded, err := json.MarshalIndent(v, "", "\t")
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入vehicles")
+		vehicles := initVehicles()
+		b := tx.Bucket(vehicle)
+		for i, v := range vehicles { //range遍历，返回下标，和值
+			encoded, err := json.MarshalIndent(v, "", "\t")
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		fmt.Println("正在插入species")
+		speciesAll := initSpecies()
+		b := tx.Bucket(species)
+		for i, v := range speciesAll { //range遍历，返回下标，和值
+			encoded, err := json.MarshalIndent(v, "", "\t")
+
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+
+			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			if err != nil {
+				fmt.Println("open err:", err)
+				return err
+			}
+		}
+		return nil
 	})
 	fmt.Println("AddInitData完成")
 
@@ -190,14 +204,14 @@ func initPeoples() []entity.People {
 	Path := "./data/datainit/people.json"
 	var datas []entity.People
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
@@ -208,14 +222,14 @@ func initFilms() []entity.Film {
 	Path := "./data/datainit/films.json"
 	var datas []entity.Film
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
@@ -226,14 +240,14 @@ func initStarships() []entity.Starship {
 	Path := "./data/datainit/starships.json"
 	var datas []entity.Starship
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
@@ -244,14 +258,14 @@ func initPlanets() []entity.Planet {
 	Path := "./data/datainit/planets.json"
 	var datas []entity.Planet
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
@@ -262,14 +276,14 @@ func initVehicles() []entity.Vehicle {
 	Path := "./data/datainit/vehicles.json"
 	var datas []entity.Vehicle
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
@@ -280,14 +294,14 @@ func initSpecies() []entity.Species {
 	Path := "./data/datainit/species.json"
 	var datas []entity.Species
 
-	josnStr, err := ioutil.ReadFile(Path)
+	jsonStr, err := ioutil.ReadFile(Path)
 	if err != nil {
 		panic(err)
 	}
 
-	//str := strings.Replace(string(josnStr), "\n", "", 1)
+	//str := strings.Replace(string(jsonStr), "\n", "", 1)
 
-	err = json.Unmarshal(josnStr, &datas)
+	err = json.Unmarshal(jsonStr, &datas)
 	if err != nil {
 		panic(err)
 	}
