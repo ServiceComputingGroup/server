@@ -10,6 +10,7 @@ import (
 
 func InsertUser(user *entity.User) bool {
 	_, err := GetUser(user.UserName)
+
 	if err == nil {
 		return false
 	}
@@ -25,7 +26,6 @@ func DeleteUser(username string) error {
 		return b.Delete([]byte(username))
 	})
 	return err
-
 }
 func UpdateUser(user *entity.User) error {
 	err := db.Update(func(tx *bolt.Tx) error {
@@ -48,6 +48,7 @@ func GetUser(username string) (*entity.User, error) {
 		b := tx.Bucket(userB)
 
 		val := b.Get([]byte(username))
+
 		err := json.Unmarshal(val, &user)
 		return err
 	})
