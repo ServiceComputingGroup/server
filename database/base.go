@@ -200,13 +200,7 @@ func AddInitData() {
 		return nil
 	})
 	fmt.Println("AddInitData完成")
-	/*var user *entity.User
-	user.UserName = "1"
-	user.Password = "1"
-	user.Email = "1"
-	user.Phone = "1"
-	InsertUser(user)
-	GetPerson(user.UserName)*/
+
 }
 func initPeoples() []entity.People {
 	Path := "./data/datainit/people.json"
