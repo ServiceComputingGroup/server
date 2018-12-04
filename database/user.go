@@ -2,12 +2,14 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
 )
 
 func InsertUser(user *entity.User) bool {
+	fmt.Println(user)
 	_, err := GetUser(user.UserName)
 	if err == nil {
 		return false
@@ -39,7 +41,7 @@ func UpdateUser(user *entity.User) error {
 	return err
 }
 func GetUser(username string) (*entity.User, error) {
-	//fmt.Println("GetUser")
+	fmt.Println("GetUser")
 	var user *entity.User
 
 	err := db.View(func(tx *bolt.Tx) error {
@@ -50,6 +52,7 @@ func GetUser(username string) (*entity.User, error) {
 		err := json.Unmarshal(val, &user)
 		return err
 	})
+	fmt.Println(user.UserName)
 	return user, err
 
 }

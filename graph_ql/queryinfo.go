@@ -77,7 +77,7 @@ func Queryinfo() *graphql.Field {
 				}
 				if page != nil {
 					pagenum, err := strconv.Atoi(page.(string))
-					if (pagenum-1)*10 >= len(all_data) || err != nil || page <= 0{
+					if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
 						return "404 not found", nil
 					} else {
 						var max_num int

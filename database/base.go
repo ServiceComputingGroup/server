@@ -86,9 +86,9 @@ func AddInitData() {
 		peoples := initPeoples()
 		b := tx.Bucket(people)
 		for i, v := range peoples { //range遍历，返回下标，和值
-			encoded, err := json.Marshal(v)
+			//encoded, err := json.Marshal(v)
 
-			//encoded, err := json.MarshalIndent(v, "", "\t")
+			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err

@@ -21,6 +21,7 @@ var queryType = graphql.NewObject(
 )
 
 func createToken(key string, m map[string]interface{}) string {
+	fmt.Println(m)
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 

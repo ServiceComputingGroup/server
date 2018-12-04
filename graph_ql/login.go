@@ -1,6 +1,7 @@
 package graph_ql
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/database"
@@ -35,6 +36,8 @@ func LoginFieldConfig() *graphql.Field {
 				userinfo["username"] = username
 				userinfo["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 				userinfo["iat"] = time.Now().Unix()
+
+				fmt.Println(userinfo)
 				key := "UserToken"
 				token := createToken(key, userinfo)
 				return token, nil

@@ -47,9 +47,7 @@ func RegisterFieldConfig() *graphql.Field {
 			userinfo["username"] = user.UserName
 			userinfo["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 			userinfo["iat"] = time.Now().Unix()
-			fmt.Println(userinfo["username"])
-			fmt.Println(userinfo["exp"])
-			fmt.Println(userinfo["iat"])
+			fmt.Println(userinfo)
 
 			key := "UserToken"
 			token := createToken(key, userinfo)
