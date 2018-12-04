@@ -27,8 +27,8 @@ func LoginFieldConfig() *graphql.Field {
 			username := p.Args["username"].(string)
 			password := p.Args["password"].(string)
 			user, err := database.GetUser(username)
-			if err != nil {
-				return "No such user.", err
+			if err != true {
+				return "No such user.", nil
 			} else if password != user.Password {
 				return "Password incorrect.", nil
 			} else {

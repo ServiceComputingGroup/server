@@ -1,9 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"net/http"
 
+	"github.com/ServiceComputingGroup/simpleWebServer/database"
 	"github.com/ServiceComputingGroup/simpleWebServer/graph_ql"
 	"github.com/rs/cors"
 )
@@ -15,5 +16,5 @@ func main() {
 	handler := cors.Default().Handler(h)
 	http.Handle("/graphql", handler)
 	fmt.Println("server run on port:", apiPort)
-	http.ListenAndServe(apiPort, nil)*/
+	http.ListenAndServe(apiPort, nil)
 }
