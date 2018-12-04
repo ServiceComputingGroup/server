@@ -12,7 +12,7 @@ func LoginFieldConfig() *graphql.Field {
 		Type:        graphql.String,
 		Description: "用户登录",
 		Args: graphql.FieldConfigArgument{
-			"userName": &graphql.ArgumentConfig{
+			"username": &graphql.ArgumentConfig{
 				Description: "用户名称",
 				Type:        graphql.NewNonNull(graphql.String),
 			},
@@ -23,7 +23,7 @@ func LoginFieldConfig() *graphql.Field {
 		},
 
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			username := p.Args["userName"].(string)
+			username := p.Args["username"].(string)
 			password := p.Args["password"].(string)
 			user, err := database.GetUser(username)
 			if err != nil {
@@ -31,7 +31,7 @@ func LoginFieldConfig() *graphql.Field {
 			} else if password != user.Password {
 				return "Password incorrect.", nil
 			} else {
-				var userinfo map[string]interface{}
+				userinfo := make(map[string]interface{})
 				userinfo["username"] = username
 				userinfo["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 				userinfo["iat"] = time.Now().Unix()

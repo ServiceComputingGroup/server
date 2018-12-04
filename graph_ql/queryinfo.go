@@ -1,10 +1,13 @@
 package graph_ql
 
 import (
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/database"
+	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 )
@@ -42,7 +45,7 @@ func Queryinfo() *graphql.Field {
 			isPermitted := false
 			claims, ok := parseToken(tokenstring, key)
 			if ok {
-				exp, _ := strconv.ParseInt(claims.(jwt.MapClaims)["exp"].(string), 10, 64)
+				exp := (int64)(claims.(jwt.MapClaims)["exp"].(float64))
 				if time.Now().UTC().Unix() > exp {
 					isPermitted = false
 				} else {
@@ -74,7 +77,7 @@ func Queryinfo() *graphql.Field {
 				}
 				if page != nil {
 					pagenum, err := strconv.Atoi(page.(string))
-					if (pagenum-1)*10 >= len(all_data) || err != nil {
+					if (pagenum-1)*10 >= len(all_data) || err != nil || page <= 0{
 						return "404 not found", nil
 					} else {
 						var max_num int
@@ -85,37 +88,231 @@ func Queryinfo() *graphql.Field {
 						}
 						var result []string
 						for i := (pagenum - 1) * 10; i < max_num; i++ {
-							result = append(result, all_data[i])
+							var json_result string
+							switch type_name {
+							case "film":
+								var someFilm entity.Film
+								if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
+									json_string, err := json.MarshalIndent(someFilm, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							case "people":
+								var somePeople entity.People
+								if err := json.Unmarshal([]byte(all_data[i]), &somePeople); err == nil {
+									json_string, err := json.MarshalIndent(somePeople, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							case "planet":
+								var somePlanet entity.Planet
+								if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
+									json_string, err := json.MarshalIndent(somePlanet, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							case "species":
+								var someSpecies entity.Species
+								if err := json.Unmarshal([]byte(all_data[i]), &someSpecies); err == nil {
+									json_string, err := json.MarshalIndent(someSpecies, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							case "starship":
+								var someStarship entity.Starship
+								if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
+									json_string, err := json.MarshalIndent(someStarship, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							case "vehicle":
+								var someVehicle entity.Vehicle
+								if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
+									json_string, err := json.MarshalIndent(someVehicle, "", "   ")
+									if err != nil {
+										fmt.Println("json err:", err)
+									}
+									json_result = string(json_string)
+								} else {
+									json_result = "404 Not Found"
+								}
+							}
+							result = append(result, json_result+"\n")
 						}
+						fmt.Println(result)
 						return result, nil
 					}
 				} else {
-					var max_num int
-					if len(all_data) < 10 {
-						max_num = len(all_data)
-					} else {
-						max_num = 10
-					}
 					var result []string
-					for i := 0; i < max_num; i++ {
-						result = append(result, all_data[i])
+					for i := 0; i < 10; i++ {
+						var json_result string
+						switch type_name {
+						case "film":
+							var someFilm entity.Film
+							if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
+								json_string, err := json.MarshalIndent(someFilm, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						case "people":
+							var somePeople entity.People
+							if err := json.Unmarshal([]byte(all_data[i]), &somePeople); err == nil {
+								json_string, err := json.MarshalIndent(somePeople, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						case "planet":
+							var somePlanet entity.Planet
+							if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
+								json_string, err := json.MarshalIndent(somePlanet, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						case "species":
+							var someSpecies entity.Species
+							if err := json.Unmarshal([]byte(all_data[i]), &someSpecies); err == nil {
+								json_string, err := json.MarshalIndent(someSpecies, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						case "starship":
+							var someStarship entity.Starship
+							if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
+								json_string, err := json.MarshalIndent(someStarship, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						case "vehicle":
+							var someVehicle entity.Vehicle
+							if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
+								json_string, err := json.MarshalIndent(someVehicle, "", "   ")
+								if err != nil {
+									fmt.Println("json err:", err)
+								}
+								json_result = string(json_string)
+							} else {
+								json_result = "404 Not Found"
+							}
+						}
+						result = append(result, json_result+"\n")
 					}
+					fmt.Println(result)
 					return result, nil
 				}
 			} else {
 				switch type_name {
 				case "film":
-					return database.GetFilm(index.(string)), nil
+					var someFilm entity.Film
+					if err := json.Unmarshal([]byte(database.GetFilm(index.(string))), &someFilm); err == nil {
+						json_string, err := json.MarshalIndent(someFilm, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				case "people":
-					return database.GetPerson(index.(string)), nil
+					var somePeople entity.People
+					if err := json.Unmarshal([]byte(database.GetPerson(index.(string))), &somePeople); err == nil {
+						json_string, err := json.MarshalIndent(somePeople, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				case "planet":
-					return database.GetPlanet(index.(string)), nil
+					var somePlanet entity.Planet
+					if err := json.Unmarshal([]byte(database.GetPlanet(index.(string))), &somePlanet); err == nil {
+						json_string, err := json.MarshalIndent(somePlanet, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				case "species":
-					return database.GetSpecies(index.(string)), nil
+					var someSpecies entity.Species
+					if err := json.Unmarshal([]byte(database.GetSpecies(index.(string))), &someSpecies); err == nil {
+						json_string, err := json.MarshalIndent(someSpecies, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				case "starship":
-					return database.GetStartship(index.(string)), nil
+					var someStarship entity.Starship
+					if err := json.Unmarshal([]byte(database.GetStartship(index.(string))), &someStarship); err == nil {
+						json_string, err := json.MarshalIndent(someStarship, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				case "vehicle":
-					return database.GetVehicle(index.(string)), nil
+					var someVehicle entity.Vehicle
+					if err := json.Unmarshal([]byte(database.GetVehicle(index.(string))), &someVehicle); err == nil {
+						json_string, err := json.MarshalIndent(someVehicle, "", "   ")
+						if err != nil {
+							fmt.Println("json err:", err)
+						}
+						fmt.Printf(string(json_string))
+						return string(json_string), nil
+					} else {
+						return "404 Not Found", nil
+					}
 				}
 			}
 			return "", nil

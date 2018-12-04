@@ -1,6 +1,7 @@
 package graph_ql
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/database"
@@ -37,13 +38,19 @@ func RegisterFieldConfig() *graphql.Field {
 				Password: p.Args["password"].(string),
 				Phone:    p.Args["phone"].(string),
 			}
+
 			if isInsert := database.InsertUser(user); !isInsert {
 				return "", nil
 			}
-			var userinfo map[string]interface{}
+
+			userinfo := make(map[string]interface{})
 			userinfo["username"] = user.UserName
 			userinfo["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 			userinfo["iat"] = time.Now().Unix()
+			fmt.Println(userinfo["username"])
+			fmt.Println(userinfo["exp"])
+			fmt.Println(userinfo["iat"])
+
 			key := "UserToken"
 			token := createToken(key, userinfo)
 

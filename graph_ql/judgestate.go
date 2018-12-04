@@ -1,7 +1,6 @@
 package graph_ql
 
 import (
-	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -24,9 +23,11 @@ func Judgestate() *graphql.Field {
 			message := "Token Valid."
 			tokenstring := p.Args["token"].(string)
 			claims, ok := parseToken(tokenstring, key)
-			if ok {
-				exp, _ := strconv.ParseInt(claims.(jwt.MapClaims)["exp"].(string), 10, 64)
-				if time.Now().UTC().Unix() > exp {
+			if ok && claims != nil {
+				exp, isExist := claims.(jwt.MapClaims)["exp"]
+				if !isExist {
+					message = "Token Invalid"
+				} else if time.Now().UTC().Unix() > (int64)(exp.(float64)) {
 					message = "Token Out of Data."
 				} else {
 					message = "Token Valid."

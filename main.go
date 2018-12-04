@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/liping/simpleWebServer/graph_ql"
+	"github.com/ServiceComputingGroup/simpleWebServer/graph_ql"
 
 	"github.com/rs/cors"
 )

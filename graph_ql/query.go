@@ -33,13 +33,18 @@ func createToken(key string, m map[string]interface{}) string {
 }
 
 func parseToken(tokenString string, key string) (interface{}, bool) {
+	fmt.Println(tokenString)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return []byte("UserToken"), nil
+		return []byte(key), nil
 	})
+	if err != nil {
+		return nil, false
+	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		fmt.Println(claims)
 		return claims, true
 	} else {
 		fmt.Println(err)
-		return "", false
+		return nil, false
 	}
 }
