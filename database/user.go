@@ -9,6 +9,7 @@ import (
 )
 
 func InsertUser(user *entity.User) bool {
+	fmt.Println(user)
 	_, err := GetUser(user.UserName)
 
 	if err == nil {
@@ -52,6 +53,7 @@ func GetUser(username string) (*entity.User, error) {
 		err := json.Unmarshal(val, &user)
 		return err
 	})
+	fmt.Println(user.UserName)
 	return user, err
 
 }

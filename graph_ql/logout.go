@@ -25,7 +25,7 @@ func LogoutFieldConfig() *graphql.Field {
 			if _, err := database.GetUser(username); err != nil {
 				return "", err
 			} else {
-				var userinfo map[string]interface{}
+				userinfo := make(map[string]interface{})
 				userinfo["username"] = username
 				userinfo["exp"] = time.Now().Unix()
 				userinfo["iat"] = time.Now().Unix()
