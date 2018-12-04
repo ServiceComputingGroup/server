@@ -9,26 +9,28 @@ import (
 )
 
 func InsertUser(user *entity.User) bool {
-	fmt.Println(user)
-	_, err := GetUser(user.UserName)
 
-	if err == nil {
+	_, has := GetUser(user.UserName)
+
+	if has == true {
 		return false
 	}
 	if UpdateUser(user) == nil {
 		return true
 	}
+
 	return false
 }
 func DeleteUser(username string) error {
+
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(userB)
-
 		return b.Delete([]byte(username))
 	})
 	return err
 }
 func UpdateUser(user *entity.User) error {
+	fmt.Println("UpdateUser")
 	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(userB)
 
@@ -40,20 +42,21 @@ func UpdateUser(user *entity.User) error {
 	})
 	return err
 }
-func GetUser(username string) (*entity.User, error) {
-	fmt.Println("GetUser")
+func GetUser(username string) (*entity.User, bool) {
+
 	var user *entity.User
-
-	err := db.View(func(tx *bolt.Tx) error {
-
+	var val []byte
+	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(userB)
+		val = b.Get([]byte(username))
 
-		val := b.Get([]byte(username))
-
-		err := json.Unmarshal(val, &user)
-		return err
+		//val := b.Get([]byte(username))
+		return nil
 	})
-	fmt.Println(user.UserName)
-	return user, err
-
+	if val == nil {
+		return user, false
+	} else {
+		json.Unmarshal(val, &user)
+		return user, true
+	}
 }
