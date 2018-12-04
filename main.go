@@ -8,14 +8,8 @@ import (
 	"github.com/rs/cors"
 )
 
-/*"fmt"
-"net/http"
-
-"github.com/ServiceComputingGroup/simpleWebServer/graph_ql"
-
-"github.com/rs/cors"*/
 func main() {
-	//database.AddInitData()
+	database.AddInitData()
 	var h = graph_ql.ApiRegister()
 	apiPort := ":9091"
 	handler := cors.Default().Handler(h)
