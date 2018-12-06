@@ -1,19 +1,29 @@
 package database
 
 import (
+	"encoding/json"
+
+	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
 )
 
 func GetPlanet(key string) string {
 	key = "https://swapi.co/api/planets/" + key + "/"
-	k := []byte(key)
-	var val []byte
+	var str string
+	var data entity.Planet
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(planet)
-		val = b.Get(k)
+		cur := b.Cursor()
+
+		for k, v := cur.First(); k != nil; k, v = cur.Next() {
+			json.Unmarshal(v, &data)
+			if data.Url == key {
+				str = string(v)
+				return nil
+			}
+		}
 		return nil
 	})
-	str := string(val[:])
 	return str
 }
 
