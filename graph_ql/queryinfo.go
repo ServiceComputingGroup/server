@@ -60,225 +60,391 @@ func Queryinfo() *graphql.Field {
 			}
 
 			if index == nil {
-				var all_data []string
-				switch type_name {
-				case "films":
-					all_data = database.GetFilms()
-				case "people":
-					all_data = database.GetPeople()
-				case "planets":
-					all_data = database.GetPlanets()
-				case "species":
-					all_data = database.GetAllSpecies()
-				case "starships":
-					all_data = database.GetStartships()
-				case "vehicles":
-					all_data = database.GetVehicles()
-				}
 				if page != nil {
 					pagenum, err := strconv.Atoi(page.(string))
-					if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
-						return "404 not found", nil
-					} else {
-						count := len(all_data)
-						var next string
-						var previous string
-						if pagenum*10 >= len(all_data) {
-							next = "null"
-						} else {
-							next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
-						}
-						if pagenum == 1 {
-							previous = "null"
-						} else {
-							previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
-						}
+					switch type_name {
+					case "films":
+						all_data := database.GetFilms()
 
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.Film
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QueryFilm{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					case "people":
+						all_data := database.GetPeople()
+
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.People
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QueryPeople{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					case "planets":
+						all_data := database.GetPlanets()
+
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.Planet
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QueryPlanet{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					case "species":
+						all_data := database.GetAllSpecies()
+
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.Species
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QuerySpecies{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					case "starships":
+						all_data := database.GetStarships()
+
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.Starship
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QueryStarship{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					case "vehicles":
+						all_data := database.GetVehicles()
+
+						if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
+							return "404 not found", nil
+						} else {
+							//get count, next_page, previous_page
+							count := len(all_data)
+							var next string
+							var previous string
+							if pagenum*10 >= len(all_data) {
+								next = "null"
+							} else {
+								next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+							}
+							if pagenum == 1 {
+								previous = "null"
+							} else {
+								previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+							}
+							var max_num int
+							if pagenum*10 > len(all_data) {
+								max_num = len(all_data)
+							} else {
+								max_num = pagenum * 10
+							}
+							var result []entity.Vehicle
+							for i := (pagenum - 1) * 10; i < max_num; i++ {
+								result = append(result, all_data[i])
+							}
+							result_information := &entity.QueryVehicle{
+								Count:    strconv.Itoa(count),
+								Next:     next,
+								Previous: previous,
+								Result:   result,
+							}
+							json_string, _ := json.MarshalIndent(result_information, "", "\t")
+							return string(json_string), nil
+						}
+					}
+				} else {
+					switch type_name {
+					case "films":
+						var result []entity.Film
 						var max_num int
-						if pagenum*10 > len(all_data) {
+						all_data := database.GetFilms()
+						if 10 > len(all_data) {
 							max_num = len(all_data)
 						} else {
-							max_num = pagenum * 10
+							max_num = 10
 						}
-						var result []string
-						for i := (pagenum - 1) * 10; i < max_num; i++ {
-							var json_result string
-							switch type_name {
-							case "films":
-								var someFilm entity.Film
-								if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
-									json_string, err := json.MarshalIndent(someFilm, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							case "people":
-								var somePeople entity.People
-								if err := json.Unmarshal([]byte(all_data[i]), &somePeople); err == nil {
-									json_string, err := json.MarshalIndent(somePeople, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							case "planets":
-								var somePlanet entity.Planet
-								if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
-									json_string, err := json.MarshalIndent(somePlanet, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							case "species":
-								var someSpecies entity.Species
-								if err := json.Unmarshal([]byte(all_data[i]), &someSpecies); err == nil {
-									json_string, err := json.MarshalIndent(someSpecies, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							case "starships":
-								var someStarship entity.Starship
-								if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
-									json_string, err := json.MarshalIndent(someStarship, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							case "vehicles":
-								var someVehicle entity.Vehicle
-								if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
-									json_string, err := json.MarshalIndent(someVehicle, "", "   ")
-									if err != nil {
-										fmt.Println("json err:", err)
-									}
-									json_result = string(json_string)
-								} else {
-									json_result = "404 Not Found"
-								}
-							}
-							result = append(result, json_result+"\n")
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
 						}
-						result_information := &entity.QueryInformation{
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QueryFilm{
 							Count:    strconv.Itoa(count),
 							Next:     next,
 							Previous: previous,
 							Result:   result,
 						}
-						temp, _ := json.MarshalIndent(result_information, "", "\t")
-						result_information_string := string(temp)
-						fmt.Println(string(result_information_string))
-						//result_information_string, _ := json.MarshalIndent(result_information, "", "\t")
-
-						return result_information_string, nil
-					}
-				} else {
-					var result []string
-					var max_num int
-					if 10 > len(all_data) {
-						max_num = len(all_data)
-					} else {
-						max_num = 10
-					}
-					for i := 0; i < max_num; i++ {
-						var json_result string
-						switch type_name {
-						case "films":
-							var someFilm entity.Film
-							if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
-								json_string, err := json.MarshalIndent(someFilm, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
-						case "people":
-							var somePeople entity.People
-							if err := json.Unmarshal([]byte(all_data[i]), &somePeople); err == nil {
-								json_string, err := json.MarshalIndent(somePeople, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
-						case "planets":
-							var somePlanet entity.Planet
-							if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
-								json_string, err := json.MarshalIndent(somePlanet, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
-						case "species":
-							var someSpecies entity.Species
-							if err := json.Unmarshal([]byte(all_data[i]), &someSpecies); err == nil {
-								json_string, err := json.MarshalIndent(someSpecies, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
-						case "starships":
-							var someStarship entity.Starship
-							if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
-								json_string, err := json.MarshalIndent(someStarship, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
-						case "vehicles":
-							var someVehicle entity.Vehicle
-							if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
-								json_string, err := json.MarshalIndent(someVehicle, "", "   ")
-								if err != nil {
-									fmt.Println("json err:", err)
-								}
-								json_result = string(json_string)
-							} else {
-								json_result = "404 Not Found"
-							}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
+					case "people":
+						var result []entity.People
+						var max_num int
+						all_data := database.GetPeople()
+						if 10 > len(all_data) {
+							max_num = len(all_data)
+						} else {
+							max_num = 10
 						}
-						result = append(result, json_result+"\n")
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
+						}
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QueryPeople{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
+					case "planets":
+						var result []entity.Planet
+						var max_num int
+						all_data := database.GetPlanets()
+						if 10 > len(all_data) {
+							max_num = len(all_data)
+						} else {
+							max_num = 10
+						}
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
+						}
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QueryPlanet{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
+					case "species":
+						var result []entity.Species
+						var max_num int
+						all_data := database.GetAllSpecies()
+						if 10 > len(all_data) {
+							max_num = len(all_data)
+						} else {
+							max_num = 10
+						}
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
+						}
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QuerySpecies{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
+					case "starships":
+						var result []entity.Starship
+						var max_num int
+						all_data := database.GetStarships()
+						if 10 > len(all_data) {
+							max_num = len(all_data)
+						} else {
+							max_num = 10
+						}
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
+						}
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QueryStarship{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
+					case "vehicles":
+						var result []entity.Vehicle
+						var max_num int
+						all_data := database.GetVehicles()
+						if 10 > len(all_data) {
+							max_num = len(all_data)
+						} else {
+							max_num = 10
+						}
+						for i := 0; i < max_num; i++ {
+							result = append(result, all_data[i])
+						}
+						count := len(all_data)
+						next := "https://swapi.co/api/" + type_name + "/?page=2"
+						previous := "null"
+						result_information := &entity.QueryVehicle{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						json_string, _ := json.MarshalIndent(result_information, "", "\t")
+						fmt.Println(string(json_string))
+						return string(json_string), nil
 					}
-					count := len(all_data)
-					next := "https://swapi.co/api/" + type_name + "/?page=2"
-					previous := "null"
-					result_information := &entity.QueryInformation{
-						Count:    strconv.Itoa(count),
-						Next:     next,
-						Previous: previous,
-						Result:   result,
-					}
-					temp, _ := json.MarshalIndent(result_information, "", "\t")
-					result_information_string := string(temp)
-					fmt.Println(string(result_information_string))
-					return result_information_string, nil
 				}
 			} else {
 				switch type_name {
@@ -332,7 +498,7 @@ func Queryinfo() *graphql.Field {
 					}
 				case "starships":
 					var someStarship entity.Starship
-					if err := json.Unmarshal([]byte(database.GetStartship(index.(string))), &someStarship); err == nil {
+					if err := json.Unmarshal([]byte(database.GetStarship(index.(string))), &someStarship); err == nil {
 						json_string, err := json.MarshalIndent(someStarship, "", "   ")
 						if err != nil {
 							fmt.Println("json err:", err)

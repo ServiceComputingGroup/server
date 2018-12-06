@@ -1,6 +1,8 @@
 package graph_ql
 
 import (
+	"fmt"
+
 	"github.com/ServiceComputingGroup/simpleWebServer/database"
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/graphql-go/graphql"
@@ -38,6 +40,7 @@ func ModifyuserFieldConfig() *graphql.Field {
 			if err := database.UpdateUser(user); err != nil {
 				return false, err
 			}
+			fmt.Println(user)
 			return true, nil
 
 		},

@@ -108,9 +108,44 @@ type Species struct {
 	Url              string   `json:"url"`
 }
 
-type QueryInformation struct {
+type QueryPeople struct {
 	Count    string   `json:"count"`
 	Next     string   `json:"next"`
 	Previous string   `json:"previous"`
-	Result   []string `json:"result"`
+	Result   []People `json:"result"`
+}
+
+type QueryPlanet struct {
+	Count    string   `json:"count"`
+	Next     string   `json:"next"`
+	Previous string   `json:"previous"`
+	Result   []Planet `json:"result"`
+}
+
+type QuerySpecies struct {
+	Count    string    `json:"count"`
+	Next     string    `json:"next"`
+	Previous string    `json:"previous"`
+	Result   []Species `json:"result"`
+}
+
+type QueryVehicle struct {
+	Count    string    `json:"count"`
+	Next     string    `json:"next"`
+	Previous string    `json:"previous"`
+	Result   []Vehicle `json:"result"`
+}
+
+type QueryStarship struct {
+	Count    string     `json:"count"`
+	Next     string     `json:"next"`
+	Previous string     `json:"previous"`
+	Result   []Starship `json:"result"`
+}
+
+type QueryFilm struct {
+	Count    string `json:"count"`
+	Next     string `json:"next"`
+	Previous string `json:"previous"`
+	Result   []Film `json:"result"`
 }

@@ -1,6 +1,8 @@
 package graph_ql
 
 import (
+	"fmt"
+
 	"github.com/ServiceComputingGroup/simpleWebServer/database"
 	"github.com/graphql-go/graphql"
 )
@@ -18,6 +20,7 @@ func Queryuser() *graphql.Field {
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			username := p.Args["username"].(string)
 			user, err := database.GetUser(username)
+			fmt.Println(user)
 			if err != true {
 				return "Fail to find user", nil
 			} else {
