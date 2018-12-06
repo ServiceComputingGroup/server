@@ -188,7 +188,13 @@ func Queryinfo() *graphql.Field {
 					}
 				} else {
 					var result []string
-					for i := 0; i < 10; i++ {
+					var max_num int
+					if 10 > len(all_data) {
+						max_num = len(all_data)
+					} else {
+						max_num = 10
+					}
+					for i := 0; i < max_num; i++ {
 						var json_result string
 						switch type_name {
 						case "films":
