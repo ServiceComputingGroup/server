@@ -1,10 +1,10 @@
 package database
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"strconv"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
@@ -86,16 +86,16 @@ func AddInitData() {
 		fmt.Println("正在插入peoples")
 		peoples := initPeoples()
 		b := tx.Bucket(people)
-		for i, v := range peoples { //range遍历，返回下标，和值
+		for _, v := range peoples { //range遍历，返回下标，和值
 			//encoded, err := json.Marshal(v)
-
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -107,14 +107,15 @@ func AddInitData() {
 		fmt.Println("正在插入starships")
 		starships := initStarships()
 		b := tx.Bucket(starship)
-		for i, v := range starships { //range遍历，返回下标，和值
+		for _, v := range starships { //range遍历，返回下标，和值
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -126,14 +127,15 @@ func AddInitData() {
 		fmt.Println("正在插入planets")
 		planets := initPlanets()
 		b := tx.Bucket(planet)
-		for i, v := range planets { //range遍历，返回下标，和值
+		for _, v := range planets { //range遍历，返回下标，和值
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -145,14 +147,15 @@ func AddInitData() {
 		fmt.Println("正在插入films")
 		films := initFilms()
 		b := tx.Bucket(film)
-		for i, v := range films { //range遍历，返回下标，和值
+		for _, v := range films { //range遍历，返回下标，和值
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -164,14 +167,15 @@ func AddInitData() {
 		fmt.Println("正在插入vehicles")
 		vehicles := initVehicles()
 		b := tx.Bucket(vehicle)
-		for i, v := range vehicles { //range遍历，返回下标，和值
+		for _, v := range vehicles { //range遍历，返回下标，和值
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -183,7 +187,8 @@ func AddInitData() {
 		fmt.Println("正在插入species")
 		speciesAll := initSpecies()
 		b := tx.Bucket(species)
-		for i, v := range speciesAll { //range遍历，返回下标，和值
+		for _, v := range speciesAll { //range遍历，返回下标，和值
+			id, _ := b.NextSequence()
 			encoded, err := json.MarshalIndent(v, "", "\t")
 
 			if err != nil {
@@ -191,7 +196,7 @@ func AddInitData() {
 				return err
 			}
 
-			err = b.Put([]byte(strconv.Itoa(i+1)), (encoded))
+			err = b.Put(itob(int(id)), (encoded))
 			if err != nil {
 				fmt.Println("open err:", err)
 				return err
@@ -201,6 +206,11 @@ func AddInitData() {
 	})
 	fmt.Println("AddInitData完成")
 
+}
+func itob(v int) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, uint64(v))
+	return b
 }
 func initPeoples() []entity.People {
 	Path := "./data/datainit/people.json"
