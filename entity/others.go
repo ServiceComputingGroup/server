@@ -107,3 +107,10 @@ type Species struct {
 	Edited           string   `json:"edited"`
 	Url              string   `json:"url"`
 }
+
+type QueryInformation struct {
+	Count    string   `json:"count"`
+	Next     string   `json:"next"`
+	Previous string   `json:"previous"`
+	Result   []string `json:"result"`
+}

@@ -16,6 +16,7 @@ var queryType = graphql.NewObject(
 		Fields: graphql.Fields{
 			"judgestate": Judgestate(),
 			"query":      Queryinfo(),
+			"queryuser":  Queryuser(),
 		},
 	},
 )

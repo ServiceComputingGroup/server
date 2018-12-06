@@ -80,6 +80,20 @@ func Queryinfo() *graphql.Field {
 					if (pagenum-1)*10 >= len(all_data) || err != nil || pagenum <= 0 {
 						return "404 not found", nil
 					} else {
+						count := len(all_data)
+						var next string
+						var previous string
+						if pagenum*10 >= len(all_data) {
+							next = "null"
+						} else {
+							next = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum+1)
+						}
+						if pagenum == 1 {
+							previous = "null"
+						} else {
+							previous = "https://swapi.co/api/" + type_name + "/?page=" + strconv.Itoa(pagenum-1)
+						}
+
 						var max_num int
 						if pagenum*10 > len(all_data) {
 							max_num = len(all_data)
@@ -159,8 +173,18 @@ func Queryinfo() *graphql.Field {
 							}
 							result = append(result, json_result+"\n")
 						}
-						fmt.Println(result)
-						return result, nil
+						result_information := &entity.QueryInformation{
+							Count:    strconv.Itoa(count),
+							Next:     next,
+							Previous: previous,
+							Result:   result,
+						}
+						temp, _ := json.MarshalIndent(result_information, "", "\t")
+						result_information_string := string(temp)
+						fmt.Println(string(result_information_string))
+						//result_information_string, _ := json.MarshalIndent(result_information, "", "\t")
+
+						return result_information_string, nil
 					}
 				} else {
 					var result []string
@@ -236,8 +260,19 @@ func Queryinfo() *graphql.Field {
 						}
 						result = append(result, json_result+"\n")
 					}
-					fmt.Println(result)
-					return result, nil
+					count := len(all_data)
+					next := "https://swapi.co/api/" + type_name + "/?page=2"
+					previous := "null"
+					result_information := &entity.QueryInformation{
+						Count:    strconv.Itoa(count),
+						Next:     next,
+						Previous: previous,
+						Result:   result,
+					}
+					temp, _ := json.MarshalIndent(result_information, "", "\t")
+					result_information_string := string(temp)
+					fmt.Println(string(result_information_string))
+					return result_information_string, nil
 				}
 			} else {
 				switch type_name {
