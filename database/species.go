@@ -27,17 +27,17 @@ func GetSpecies(key string) string {
 	return str
 }
 
-func GetAllSpecies() []string {
+func GetAllSpecies() []entity.Species {
 
-	var result []string
-
+	var result []entity.Species
+	var data entity.Species
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(species)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})

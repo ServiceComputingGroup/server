@@ -27,17 +27,17 @@ func GetVehicle(key string) string {
 	return str
 }
 
-func GetVehicles() []string {
+func GetVehicles() []entity.Vehicle {
 
-	var result []string
-
+	var result []entity.Vehicle
+	var data entity.Vehicle
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(vehicle)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})

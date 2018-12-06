@@ -27,17 +27,17 @@ func GetPerson(key string) string {
 	return str
 }
 
-func GetPeople() []string {
+func GetPeople() []entity.People {
 
-	var result []string
-
+	var result []entity.People
+	var data entity.People
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(people)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})

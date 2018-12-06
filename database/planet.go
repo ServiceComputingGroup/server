@@ -27,19 +27,16 @@ func GetPlanet(key string) string {
 	return str
 }
 
-func GetPlanets() []string {
-	var numbers []int
-	numbers = append(numbers, 2, 3, 4)
-
-	var result []string
-
+func GetPlanets() []entity.Planet {
+	var result []entity.Planet
+	var data entity.Planet
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(planet)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})

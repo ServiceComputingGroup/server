@@ -7,7 +7,7 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func GetStartship(key string) string {
+func GetStarship(key string) string {
 	key = "https://swapi.co/api/starships/" + key + "/"
 	var str string
 	var data entity.Starship
@@ -27,17 +27,17 @@ func GetStartship(key string) string {
 	return str
 }
 
-func GetStartships() []string {
+func GetStarships() []entity.Starship {
 
-	var result []string
-
+	var result []entity.Starship
+	var data entity.Starship
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(starship)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})

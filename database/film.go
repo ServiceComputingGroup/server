@@ -28,17 +28,17 @@ func GetFilm(key string) string {
 	return str
 }
 
-func GetFilms() []string {
+func GetFilms() []entity.Film {
 
-	var result []string
-
+	var result []entity.Film
+	var data entity.Film
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(film)
 		cur := b.Cursor()
 
 		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-
-			result = append(result, string(v[:]))
+			json.Unmarshal(v, &data)
+			result = append(result, data)
 		}
 		return nil
 	})
