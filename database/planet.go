@@ -5,6 +5,7 @@ import (
 )
 
 func GetPlanet(key string) string {
+	key = "https://swapi.co/api/planets/" + key + "/"
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {

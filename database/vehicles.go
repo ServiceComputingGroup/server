@@ -5,6 +5,7 @@ import (
 )
 
 func GetVehicle(key string) string {
+	key = "https://swapi.co/api/vehicles/" + key + "/"
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {

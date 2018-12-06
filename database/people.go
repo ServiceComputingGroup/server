@@ -5,6 +5,7 @@ import (
 )
 
 func GetPerson(key string) string {
+	key = "https://swapi.co/api/people/" + key + "/"
 	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {

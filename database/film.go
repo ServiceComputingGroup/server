@@ -5,8 +5,9 @@ import (
 )
 
 func GetFilm(key string) string {
-	k := []byte(key)
 
+	key = "https://swapi.co/api/films/" + key + "/"
+	k := []byte(key)
 	var val []byte
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(film)
