@@ -47,7 +47,14 @@ func AddInitData() {
 	fmt.Println("正在创建bucket")
 
 	db.Update(func(tx *bolt.Tx) error {
+
 		tx.DeleteBucket(userB)
+		tx.DeleteBucket(people)
+		tx.DeleteBucket(film)
+		tx.DeleteBucket(planet)
+		tx.DeleteBucket(starship)
+		tx.DeleteBucket(species)
+		tx.DeleteBucket(vehicle)
 		_, err := tx.CreateBucket(userB)
 		if err != nil {
 			fmt.Println("open err:", err)
