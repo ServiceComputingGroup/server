@@ -62,17 +62,17 @@ func Queryinfo() *graphql.Field {
 			if index == nil {
 				var all_data []string
 				switch type_name {
-				case "film":
+				case "films":
 					all_data = database.GetFilms()
 				case "people":
 					all_data = database.GetPeople()
-				case "planet":
+				case "planets":
 					all_data = database.GetPlanets()
 				case "species":
 					all_data = database.GetAllSpecies()
-				case "starship":
+				case "starships":
 					all_data = database.GetStartships()
-				case "vehicle":
+				case "vehicles":
 					all_data = database.GetVehicles()
 				}
 				if page != nil {
@@ -90,7 +90,7 @@ func Queryinfo() *graphql.Field {
 						for i := (pagenum - 1) * 10; i < max_num; i++ {
 							var json_result string
 							switch type_name {
-							case "film":
+							case "films":
 								var someFilm entity.Film
 								if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
 									json_string, err := json.MarshalIndent(someFilm, "", "   ")
@@ -112,7 +112,7 @@ func Queryinfo() *graphql.Field {
 								} else {
 									json_result = "404 Not Found"
 								}
-							case "planet":
+							case "planets":
 								var somePlanet entity.Planet
 								if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
 									json_string, err := json.MarshalIndent(somePlanet, "", "   ")
@@ -134,7 +134,7 @@ func Queryinfo() *graphql.Field {
 								} else {
 									json_result = "404 Not Found"
 								}
-							case "starship":
+							case "starships":
 								var someStarship entity.Starship
 								if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
 									json_string, err := json.MarshalIndent(someStarship, "", "   ")
@@ -145,7 +145,7 @@ func Queryinfo() *graphql.Field {
 								} else {
 									json_result = "404 Not Found"
 								}
-							case "vehicle":
+							case "vehicles":
 								var someVehicle entity.Vehicle
 								if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
 									json_string, err := json.MarshalIndent(someVehicle, "", "   ")
@@ -167,7 +167,7 @@ func Queryinfo() *graphql.Field {
 					for i := 0; i < 10; i++ {
 						var json_result string
 						switch type_name {
-						case "film":
+						case "films":
 							var someFilm entity.Film
 							if err := json.Unmarshal([]byte(all_data[i]), &someFilm); err == nil {
 								json_string, err := json.MarshalIndent(someFilm, "", "   ")
@@ -189,7 +189,7 @@ func Queryinfo() *graphql.Field {
 							} else {
 								json_result = "404 Not Found"
 							}
-						case "planet":
+						case "planets":
 							var somePlanet entity.Planet
 							if err := json.Unmarshal([]byte(all_data[i]), &somePlanet); err == nil {
 								json_string, err := json.MarshalIndent(somePlanet, "", "   ")
@@ -211,7 +211,7 @@ func Queryinfo() *graphql.Field {
 							} else {
 								json_result = "404 Not Found"
 							}
-						case "starship":
+						case "starships":
 							var someStarship entity.Starship
 							if err := json.Unmarshal([]byte(all_data[i]), &someStarship); err == nil {
 								json_string, err := json.MarshalIndent(someStarship, "", "   ")
@@ -222,7 +222,7 @@ func Queryinfo() *graphql.Field {
 							} else {
 								json_result = "404 Not Found"
 							}
-						case "vehicle":
+						case "vehicles":
 							var someVehicle entity.Vehicle
 							if err := json.Unmarshal([]byte(all_data[i]), &someVehicle); err == nil {
 								json_string, err := json.MarshalIndent(someVehicle, "", "   ")
@@ -241,7 +241,7 @@ func Queryinfo() *graphql.Field {
 				}
 			} else {
 				switch type_name {
-				case "film":
+				case "films":
 					var someFilm entity.Film
 					if err := json.Unmarshal([]byte(database.GetFilm(index.(string))), &someFilm); err == nil {
 						json_string, err := json.MarshalIndent(someFilm, "", "   ")
@@ -265,7 +265,7 @@ func Queryinfo() *graphql.Field {
 					} else {
 						return "404 Not Found", nil
 					}
-				case "planet":
+				case "planets":
 					var somePlanet entity.Planet
 					if err := json.Unmarshal([]byte(database.GetPlanet(index.(string))), &somePlanet); err == nil {
 						json_string, err := json.MarshalIndent(somePlanet, "", "   ")
@@ -289,7 +289,7 @@ func Queryinfo() *graphql.Field {
 					} else {
 						return "404 Not Found", nil
 					}
-				case "starship":
+				case "starships":
 					var someStarship entity.Starship
 					if err := json.Unmarshal([]byte(database.GetStartship(index.(string))), &someStarship); err == nil {
 						json_string, err := json.MarshalIndent(someStarship, "", "   ")
@@ -301,7 +301,7 @@ func Queryinfo() *graphql.Field {
 					} else {
 						return "404 Not Found", nil
 					}
-				case "vehicle":
+				case "vehicles":
 					var someVehicle entity.Vehicle
 					if err := json.Unmarshal([]byte(database.GetVehicle(index.(string))), &someVehicle); err == nil {
 						json_string, err := json.MarshalIndent(someVehicle, "", "   ")
