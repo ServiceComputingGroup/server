@@ -48,7 +48,7 @@ func AddInitData() {
 
 	db.Update(func(tx *bolt.Tx) error {
 
-		tx.DeleteBucket(userB)
+		
 		tx.DeleteBucket(people)
 		tx.DeleteBucket(film)
 		tx.DeleteBucket(planet)
