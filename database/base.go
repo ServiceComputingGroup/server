@@ -47,8 +47,6 @@ func AddInitData() {
 	fmt.Println("正在创建bucket")
 
 	db.Update(func(tx *bolt.Tx) error {
-
-		
 		tx.DeleteBucket(people)
 		tx.DeleteBucket(film)
 		tx.DeleteBucket(planet)
