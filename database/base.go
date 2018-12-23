@@ -9,12 +9,10 @@ import (
 	"strings"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
-	"github.com/boltdb/bolt"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	db       *bolt.DB
 	userB    []byte
 	people   []byte
 	film     []byte
@@ -24,11 +22,9 @@ var (
 	vehicle  []byte
 )
 
-const dbname = "./data/module.db"
-
 func init() {
 	var err error
-	db, err = bolt.Open(dbname, 0600, nil)
+
 	//初始化bucket
 	userB = []byte("user")
 	people = []byte("people")
