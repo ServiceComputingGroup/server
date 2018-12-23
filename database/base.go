@@ -48,7 +48,7 @@ func init() {
 const (
 	userName = "docker"
 	password = "123456"
-	ip       = "localhost"
+	ip       = "172.18.0.2"
 	port     = "3306"
 	dbName   = "docker_mysql"
 )
