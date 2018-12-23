@@ -69,6 +69,8 @@ reconnect:
 		fmt.Println("opon database fail")
 		time.Sleep(time.Duration(2) * time.Second)
 		goto reconnect
+	} else {
+		fmt.Println("opon database success")
 	}
 
 }
