@@ -21,7 +21,7 @@ func InsertUser(user *entity.User) bool {
 		return false
 	}
 	//准备sql语句
-	stmt, err := tx.Prepare("INSERT INTO user  VALUES (?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO user VALUES (?, ?)")
 	if err != nil {
 		fmt.Println("Prepare fail")
 		return false
@@ -35,7 +35,6 @@ func InsertUser(user *entity.User) bool {
 	}
 	//将事务提交
 	tx.Commit()
-
 	return true
 }
 func DeleteUser(username string) error {
@@ -105,7 +104,7 @@ func GetUser(username string) (*entity.User, bool) {
 	var str string
 	err := DB.QueryRow("SELECT * FROM user WHERE username = ?", username).Scan(&id, &str)
 	if err != nil {
-		fmt.Println("用户不存在")
+		fmt.Println("用户不存在数据库中")
 		return nil, false
 	}
 	json.Unmarshal([]byte(str), &data)
