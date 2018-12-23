@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	_ "github.com/go-sql-driver/mysql"
@@ -66,6 +67,7 @@ reconnect:
 	//验证连接
 	if err := DB.Ping(); err != nil {
 		fmt.Println("opon database fail")
+		time.Sleep(time.Duration(2) * time.Second)
 		goto reconnect
 	}
 
