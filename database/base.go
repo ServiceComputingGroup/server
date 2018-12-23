@@ -1,13 +1,12 @@
 package database
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
-
-	"database/sql"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
@@ -49,7 +48,7 @@ func init() {
 const (
 	userName = "docker"
 	password = "123456"
-	ip       = "192.168.100.2"
+	ip       = "127.0.0.1"
 	port     = "3306"
 	dbName   = "docker_mysql"
 )
