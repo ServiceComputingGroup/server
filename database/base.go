@@ -1,13 +1,17 @@
 package database
 
 import (
-	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"strings"
+
+	"database/sql"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
 	"github.com/boltdb/bolt"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -38,184 +42,192 @@ func init() {
 		fmt.Println("open err:", err)
 		return
 	}
-
+	InitDB()
 	//AddInitData()
 }
-func AddInitData() {
 
-	//创建bucket
-	fmt.Println("正在创建bucket")
+const (
+	userName = "docker"
+	password = "123456"
+	ip       = "192.168.100.3"
+	port     = "3306"
+	dbName   = "docker_mysql"
+)
 
-	db.Update(func(tx *bolt.Tx) error {
-		tx.DeleteBucket(people)
-		tx.DeleteBucket(film)
-		tx.DeleteBucket(planet)
-		tx.DeleteBucket(starship)
-		tx.DeleteBucket(species)
-		tx.DeleteBucket(vehicle)
-		_, err := tx.CreateBucket(userB)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
-		_, err = tx.CreateBucket(people)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
+//Db数据库连接池
+var DB *sql.DB
 
-		_, err = tx.CreateBucket(film)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
-		_, err = tx.CreateBucket(planet)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
-		_, err = tx.CreateBucket(species)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
-		_, err = tx.CreateBucket(starship)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
-		_, err = tx.CreateBucket(vehicle)
-		if err != nil {
-			fmt.Println("open err:", err)
-		}
+func InitDB() {
+	//构建连接："用户名:密码@tcp(IP:端口)/数据库?charset=utf8"
+	path := strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
 
-		return err
-
-	})
-	fmt.Println("正在插入数据")
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入peoples")
-		peoples := initPeoples()
-		b := tx.Bucket(people)
-		for _, v := range peoples { //range遍历，返回下标，和值
-			//encoded, err := json.Marshal(v)
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入starships")
-		starships := initStarships()
-		b := tx.Bucket(starship)
-		for _, v := range starships { //range遍历，返回下标，和值
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入planets")
-		planets := initPlanets()
-		b := tx.Bucket(planet)
-		for _, v := range planets { //range遍历，返回下标，和值
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入films")
-		films := initFilms()
-		b := tx.Bucket(film)
-		for _, v := range films { //range遍历，返回下标，和值
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入vehicles")
-		vehicles := initVehicles()
-		b := tx.Bucket(vehicle)
-		for _, v := range vehicles { //range遍历，返回下标，和值
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	db.Update(func(tx *bolt.Tx) error {
-		fmt.Println("正在插入species")
-		speciesAll := initSpecies()
-		b := tx.Bucket(species)
-		for _, v := range speciesAll { //range遍历，返回下标，和值
-			id, _ := b.NextSequence()
-			encoded, err := json.MarshalIndent(v, "", "\t")
-
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-
-			err = b.Put(itob(int(id)), (encoded))
-			if err != nil {
-				fmt.Println("open err:", err)
-				return err
-			}
-		}
-		return nil
-	})
-	fmt.Println("AddInitData完成")
+	//打开数据库,前者是驱动名，所以要导入： _ "github.com/go-sql-driver/mysql"
+	DB, _ = sql.Open("mysql", path)
+	//设置数据库最大连接数
+	DB.SetConnMaxLifetime(100)
+	//设置上数据库最大闲置连接数
+	DB.SetMaxIdleConns(10)
+	//验证连接
+	if err := DB.Ping(); err != nil {
+		fmt.Println("opon database fail")
+		return
+	}
 
 }
-func itob(v int) []byte {
-	b := make([]byte, 8)
-	binary.BigEndian.PutUint64(b, uint64(v))
-	return b
+
+func AddInitData() {
+	InitDB()
+	/*mysql_film()
+	mysql_people()
+	mysql_starship()
+	mysql_planet()
+	mysql_vehicle()
+	mysql_species()*/
+}
+func mysql_film() {
+	f, _ := os.OpenFile("data/datamysql/film.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initFilms()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
+}
+func mysql_people() {
+	f, _ := os.OpenFile("data/datamysql/people.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initPeoples()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
+}
+func mysql_starship() {
+	f, _ := os.OpenFile("data/datamysql/starship.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initStarships()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
+}
+func mysql_planet() {
+	f, _ := os.OpenFile("data/datamysql/planet.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initPlanets()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
+}
+func mysql_vehicle() {
+	f, _ := os.OpenFile("data/datamysql/vehicle.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initVehicles()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
+}
+func mysql_species() {
+	f, _ := os.OpenFile("data/datamysql/species.txt", os.O_WRONLY|os.O_TRUNC, 0600)
+	data := initSpecies()
+	size := len(data)
+	for index, v := range data {
+		encoded, _ := json.MarshalIndent(v, "", "\t")
+		var new []byte
+		for _, v := range encoded {
+			if v == '\'' {
+				new = append(new, '\\', '\'')
+			} else {
+				new = append(new, v)
+			}
+		}
+		str := "(" + string(new) + "')"
+		f.Write([]byte(str))
+		if size != index+1 {
+			f.Write([]byte(","))
+		}
+
+	}
+	f.Write([]byte(";"))
+	f.Close()
 }
 func initPeoples() []entity.People {
 	Path := "./data/datainit/people.json"

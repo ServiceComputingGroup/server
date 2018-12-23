@@ -2,45 +2,45 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
-	"github.com/boltdb/bolt"
 )
 
 func GetSpecies(key string) string {
 	key = "https://swapi.co/api/species/" + key + "/"
 	var str string
-	var data entity.Species
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(species)
-		cur := b.Cursor()
 
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			if data.Url == key {
-				str = string(v)
-				return nil
-			}
+	datas := GetAllSpecies()
+	for _, v := range datas {
+
+		if v.Url == key {
+			encoded, _ := json.MarshalIndent(v, "", "\t")
+			str = string(encoded)
+
 		}
-		return nil
-	})
+	}
 	return str
 }
-
 func GetAllSpecies() []entity.Species {
-
-	var result []entity.Species
-	var data entity.Species
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(species)
-		cur := b.Cursor()
-
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			result = append(result, data)
+	//执行查询语句
+	rows, err := DB.Query("SELECT * from species")
+	if err != nil {
+		fmt.Println("查询出错了")
+	}
+	var datas []entity.Species
+	//循环读取结果
+	for rows.Next() {
+		var data entity.Species
+		var str string
+		var id int
+		err := rows.Scan(&id, &str)
+		json.Unmarshal([]byte(str), &data)
+		if err != nil {
+			fmt.Println("rows fail")
 		}
-		return nil
-	})
-
-	return result
+		//将user追加到users的这个数组中
+		datas = append(datas, data)
+	}
+	return datas
 }

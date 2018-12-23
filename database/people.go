@@ -2,45 +2,45 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
-	"github.com/boltdb/bolt"
 )
 
 func GetPerson(key string) string {
 	key = "https://swapi.co/api/people/" + key + "/"
 	var str string
-	var data entity.People
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
-		cur := b.Cursor()
 
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			if data.Url == key {
-				str = string(v)
-				return nil
-			}
+	datas := GetPeople()
+	for _, v := range datas {
+
+		if v.Url == key {
+			encoded, _ := json.MarshalIndent(v, "", "\t")
+			str = string(encoded)
+
 		}
-		return nil
-	})
+	}
 	return str
 }
-
 func GetPeople() []entity.People {
-
-	var result []entity.People
-	var data entity.People
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(people)
-		cur := b.Cursor()
-
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			result = append(result, data)
+	//执行查询语句
+	rows, err := DB.Query("SELECT * from people")
+	if err != nil {
+		fmt.Println("查询出错了")
+	}
+	var datas []entity.People
+	//循环读取结果
+	for rows.Next() {
+		var data entity.People
+		var str string
+		var id int
+		err := rows.Scan(&id, &str)
+		json.Unmarshal([]byte(str), &data)
+		if err != nil {
+			fmt.Println("rows fail")
 		}
-		return nil
-	})
-
-	return result
+		//将user追加到users的这个数组中
+		datas = append(datas, data)
+	}
+	return datas
 }

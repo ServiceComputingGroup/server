@@ -2,45 +2,45 @@ package database
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/ServiceComputingGroup/simpleWebServer/entity"
-	"github.com/boltdb/bolt"
 )
 
 func GetStarship(key string) string {
 	key = "https://swapi.co/api/starships/" + key + "/"
 	var str string
-	var data entity.Starship
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(starship)
-		cur := b.Cursor()
 
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			if data.Url == key {
-				str = string(v)
-				return nil
-			}
+	datas := GetStarships()
+	for _, v := range datas {
+
+		if v.Url == key {
+			encoded, _ := json.MarshalIndent(v, "", "\t")
+			str = string(encoded)
+
 		}
-		return nil
-	})
+	}
 	return str
 }
-
 func GetStarships() []entity.Starship {
-
-	var result []entity.Starship
-	var data entity.Starship
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(starship)
-		cur := b.Cursor()
-
-		for k, v := cur.First(); k != nil; k, v = cur.Next() {
-			json.Unmarshal(v, &data)
-			result = append(result, data)
+	//执行查询语句
+	rows, err := DB.Query("SELECT * from starship")
+	if err != nil {
+		fmt.Println("查询出错了")
+	}
+	var datas []entity.Starship
+	//循环读取结果
+	for rows.Next() {
+		var data entity.Starship
+		var str string
+		var id int
+		err := rows.Scan(&id, &str)
+		json.Unmarshal([]byte(str), &data)
+		if err != nil {
+			fmt.Println("rows fail")
 		}
-		return nil
-	})
-
-	return result
+		//将user追加到users的这个数组中
+		datas = append(datas, data)
+	}
+	return datas
 }
