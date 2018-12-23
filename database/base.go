@@ -49,7 +49,7 @@ func init() {
 const (
 	userName = "docker"
 	password = "123456"
-	ip       = "192.168.100.2"
+	ip       = "172.18.0.2"
 	port     = "3306"
 	dbName   = "docker_mysql"
 )
@@ -62,6 +62,7 @@ func InitDB() {
 	path := strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
 
 	//打开数据库,前者是驱动名，所以要导入： _ "github.com/go-sql-driver/mysql"
+reconnect:
 	DB, _ = sql.Open("mysql", path)
 	//设置数据库最大连接数
 	DB.SetConnMaxLifetime(100)
@@ -70,7 +71,7 @@ func InitDB() {
 	//验证连接
 	if err := DB.Ping(); err != nil {
 		fmt.Println("opon database fail")
-		return
+		goto reconnect
 	}
 
 }
